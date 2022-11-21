@@ -82,34 +82,34 @@ let elementProductContainer = document.getElementById('main-products-container')
 let itemsArray = [];
 let total = 0;
 
+function creaElemento(elemento, clase, texto){
+    let elementoCrear = document.createElement(elemento);
+    elementoCrear.classList.add(clase);
+    if (texto){
+        elementoCrear.textContent = texto;
+    }
+    return elementoCrear;
+}
+
 function renderProducts(){
     //Rendering every product in the ddbb
     for(let i = 0; i < products.length; i++){        
         
-        //main-item
-        let elementMainItem = document.createElement('div');
-        elementMainItem.classList.add('main-item');
+        //main-item - optimizado
+        let elementMainItem = creaElemento('div','main-item');
         elementProductContainer.appendChild(elementMainItem);
         
-        //details
-        let elementMainItemDetails = document.createElement('div');
-        elementMainItemDetails.classList.add('main-item-details');
-        elementMainItem.appendChild(elementMainItemDetails);
+        //details - optimizado con la funcion creaElemento y anadirNodos
+        let elementMainItemDetails = creaElemento('div','main-item-details');
 
-        let elementMainItemImg = document.createElement('img');
-        elementMainItemImg.classList.add('main-item-img');
+        let elementMainItemImg = creaElemento('img','main-item-img');
         elementMainItemImg.setAttribute('src', products[i].imagen);
-        elementMainItemDetails.appendChild(elementMainItemImg);
 
-        let elementMainItemName = document.createElement('p');
-        elementMainItemName.classList.add('main-item-name');
-        elementMainItemName.textContent = products[i].nombre;
-        elementMainItemDetails.appendChild(elementMainItemName);
+        let elementMainItemName = creaElemento('p','main-item-name', products[i].nombre);
         
-        //order
+        //order - pendiente de optimizar
         let elementMainItemOrder = document.createElement('div');
         elementMainItemOrder.classList.add('main-item-order');
-        elementMainItem.appendChild(elementMainItemOrder);
 
         let elementMainItemPrice = document.createElement('p');
         elementMainItemPrice.classList.add('main-item-price');
@@ -122,6 +122,16 @@ function renderProducts(){
         elementMainItemAdd.textContent = 'Añadir al carrito';
         elementMainItemAdd.addEventListener('click', function(){ addItem(products[i], i)});
         elementMainItemOrder.appendChild(elementMainItemAdd);
+
+        anadirNodos(elementMainItem,[elementMainItemDetails, elementMainItemOrder])
+        anadirNodos(elementMainItemDetails, [elementMainItemImg, elementMainItemName]);
+        
+        }
+}
+
+function anadirNodos(padre, listadoNodos){
+    for (i = 0; i < listadoNodos.length; i++){
+        padre.appendChild(listadoNodos[i]);
     }
 }
 
@@ -159,6 +169,8 @@ function addItem(product, item){
     //Reset 'exists' for following instances
     exists = false;
 }
+
+
 
 function renderCart(productsArray, exists){
     
